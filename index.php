@@ -17,7 +17,7 @@ include 'connection.php';
         $ipaddress = getenv('REMOTE_ADDR');
     else
         $ipaddress = 'UNKNOWN';
-	$q="INSERT INTO `stats` (`ip_address`, `latitude`,`longitude`) VALUES ('$ipaddress','','');";
+	$q="INSERT INTO `stats` (`ip_address`, `coordinates`,`city`) VALUES ('$ipaddress','','');";
     mysqli_query($con,$q);
 $error_msg="";
 if(isset($_POST['login']) || isset($_POST['signup'])){
@@ -33,6 +33,8 @@ if(isset($_POST['login']) || isset($_POST['signup'])){
 			$_SESSION['log_email'] =$log_email;
 			$_SESSION['log_name'] =$row['name'];
 			$_SESSION['log_client'] ="user";
+			$q_ip="INSERT INTO `stats` (`ip_address`, `coordinates`,`city`,`client`,`status`) VALUES ('$ipaddress','','','$log_email','login');";
+    		mysqli_query($con,$q_ip);
 			header("location:home.php");
 		}
 		else{
@@ -58,6 +60,8 @@ if(isset($_POST['login']) || isset($_POST['signup'])){
 				$_SESSION['log_email'] =$sign_email;
 				$_SESSION['log_name'] =$sign_name;
 				$_SESSION['log_client'] ="user";
+				$q_ip="INSERT INTO `stats` (`ip_address`, `coordinates`,`city`,`client`,`status`) VALUES ('$ipaddress','','','$log_email','signup');";
+    			mysqli_query($con,$q_ip);
 				header("location:home.php");	
 			}
 		}
@@ -72,7 +76,7 @@ if(isset($_POST['login']) || isset($_POST['signup'])){
 	<link rel="stylesheet" type="text/css" href="css/index.css">
 </head>
 
-<body>
+<body background="images/res.jpg">
 	<div class="topnav">
   		<img src="images/header_logo.jpeg" height= "45px" width = "110px" align="left">
   		<a style="float:right;" onclick="document.getElementById('id02').style.display='block'" style="width:auto;" >Sign up</a>
@@ -86,6 +90,7 @@ if(isset($_POST['login']) || isset($_POST['signup'])){
       			<span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
     		</div>
 			<div class="container">
+				use test login:<br>username: admin<br>password: admin<br>
       			<label for="log_email"><b>Username</b></label>
       			<input type="text" placeholder="Enter Username" name="log_email" required>
 
@@ -123,7 +128,39 @@ if(isset($_POST['login']) || isset($_POST['signup'])){
     		</div>
 		</form>
 	</div>
-<center><video height="300" width="300" autoplay="" loop=""><source src="https://d3i4yxtzktqr9n.cloudfront.net/web-eats/static/videos/header_animation-c22df1758f.mp4" type="video/mp4"></video></center>
+	<br><br><br><br><br><br><br><br><b><h1 style="color: black;text-align: center; ">FOODLY</h1></b>
+	<strong><center><h3 style="color: black;">Fast,fresh and instant
+ food a click away from your pick</h3></center></strong>
+ <center><div class="dist">
+ 	<a href="https://github.com/namanvashistha/foodly" style="   background-color: black;
+ 	color: #FFDF00; 
+    border: none;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 2px;
+    ">
+    Fork us on github
+    </a>
+    <a href="mailto:support@foodly.ml" style="   background-color:black ;
+
+    border: none;
+    color: #FFDF00; 
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;">
+Mail Us
+</a>
+</div></center>
 	<div class="navbar">
   		<div class="for">For Business</div>
   		<a href="restaurant_sign.php">Restaurant</a>
@@ -132,6 +169,7 @@ if(isset($_POST['login']) || isset($_POST['signup'])){
   		<div class="copy">&copy; foodly</div>
   		<a style="float:right;" href="">About Us</a>
   		<a style="float:right;" href="">FAQs</a>
+  		<a style="float:right;" href="food_donation.php">FOOD DONATION</a>
   	</div>
   	<script src="js/index.js"></script>
 </body>

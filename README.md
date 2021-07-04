@@ -1,13 +1,13 @@
 # foodly
 
-#### website build to order food online and also for business in php and ajax
+#### website built to order food online and also for business in php and ajax
 
 ## [foodly.ml](http://foodly.ml/)
 
 ### Prerequisites
 - install [xampp](https://www.apachefriends.org/download.html)
 - clone this repository into xampp/htdocs
-- read [SETUP.md](https://github.com/namanvashistha/foodly/blob/master/setup.md) file to setup the database
+- import [setup.sql](https://github.com/namanvashistha/foodly/blob/master/setup.sql) file to setup the database
 
 ## Contributing
 
@@ -15,10 +15,8 @@ Please read [CONTRIBUTING.md](https://github.com/namanvashistha/foodly/blob/mast
 
 ## Authors
 
-- [@namanvashistha](https://github.com/namanvashistha) - **Naman Vashistha**, Maintainer and Developer
-- [@bhavyamendiratta](https://github.com/bhavyamendiratta) - **Bhavya Mendiratta**, Front-End Developer
+- [@namanvashistha](https://github.com/namanvashistha) - **Naman Vashistha** - Maintainer and Developer
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/namanvashistha/foodly/blob/master/LICENSE) file for details
- 

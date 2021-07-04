@@ -18,8 +18,8 @@ if(isset($_POST['update'])){
             continue;
 		$q="INSERT INTO menu (`restaurant_id`,`name`,`price`,`discount`,`description`) VALUES ('$restaurant_log_email','$item_name[$i]', '$item_price[$i]','$item_discount[$i]','$item_desc[$i]');";
 		$q1=mysqli_query($con,$q);
-    	header('location:restaurant_home.php');
 	}	
+    header('location:restaurant_home.php');
 }
     if(isset($_POST['delete'])){
         $del_name=$_POST['del_name'];
@@ -51,12 +51,24 @@ if(isset($_POST['update'])){
 <html>
 <head>
 	<title>Restaurant Sign Up</title>
- <link rel="shortcut icon" href="images/logo.png" type="image/png">
-     <link rel="stylesheet" type="text/css" href="css/restaurant_home.css">
+    <link rel="shortcut icon" href="images/logo.png" type="image/png">
+    <link rel="stylesheet" type="text/css" href="css/restaurant_home.css">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
 </head>
 <body >
- <div class="topnav">
-        <img src="images/header_logo.jpeg" height= "45px" width = "150px" align="left"></div>
+<ul class="links_head">
+<li><img src="images\header_logo.jpeg" align="left" width="100" height="52"></li>
+ <div class="dropdown">
+    <button style= "float:right;"   class="dropbtn" onclick="myFunction()"><?php echo $_SESSION['restaurant_log_email']; ?>
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content" id="myDropdown">
+    <a target="_blank" href="mailto:<?php echo $rdetails['email'];?>">Mail</a>
+    <a href="tel:<?php echo $rdetails['phone'];?>">Call</a>
+    <a href="index.php">Logout</a></div></div>
+</ul>
 
 	<h3><?php echo $_SESSION['restaurant_log_name'];?></h3>
     <?php
@@ -74,29 +86,30 @@ if(isset($_POST['update'])){
         $q="select * from orders where order_from='$restaurant_log_email';";
         $q1=mysqli_query($con,$q);
     ?>
-    <br>active orders<br><br>
-    <div>
+    <br><div class="active_orders"><h3>Active Orders</h3></div>
         <?php
         while ($row=mysqli_fetch_array($q1)){
            if($row['status']!="delivered" && $row['status']!="declined"){
             ?>
-                <div>
-                    order id:<?php echo $row['order_id']; ?>
-                    <br>ordered by:<?php echo $row['order_by']; ?>
-                    <br>items:<br><?php 
+                 <div class="distance">
+                    <div class="ordercard">
+                        <div class="ordercardinsidetext">
+                    Order ID:<?php echo $row['order_id']; ?>
+                    <br>Customer Email:<?php echo $row['order_by']; ?>
+                    <br>Items:<br><?php 
                     $item_list  = preg_split("/ /", $row['items']);
                     for($i=0;$i<sizeof($item_list);$i=$i+2){
                         $q_itm="SELECT name FROM menu where sno='$item_list[$i]' and restaurant_id='$restaurant_log_email'; ";
                         $q1_itm=mysqli_query($con,$q_itm);
                         $row_itm=mysqli_fetch_array($q1_itm);
-                        echo "<div>&nbsp;&nbsp;".$row_itm['name']." X ".$item_list[$i+1]."</div>";
+                        echo "<div>&nbsp;&nbsp;".$row_itm['name']." &times; ".$item_list[$i+1]."</div>";
                     }
                     ?>
-                    total:<?php echo $row['total']; ?>
-                    <br>address:<?php echo $row['address']; ?>
-                    <br>rider:<?php echo $row['rider']; ?>
-                    <br>instance:<?php echo $row['instance']; ?>
-                    <br>status:<?php echo $row['status']; ?>
+                    Total cash to be collected:<?php echo $row['total']; ?>
+                
+                    <br>Rider Email:<?php echo $row['rider']; ?>
+                    <br>Instance:<?php echo $row['instance']; ?>
+                    <br>Status:<?php echo $row['status']; ?>
                     <br><form method="post">
                         <input type="text" name="order_id" value="<?php echo $row['order_id']; ?>" hidden>
                         <?php if ($row['status']=="placed") { ?>
@@ -104,42 +117,129 @@ if(isset($_POST['update'])){
                         <?php if ($row['status']!="declined") { ?>
                         <input type="submit" name="decline" value="decline"><?php } ?>
                     </form>
-                </div>
+                </div></div></div>
                 <br>    
         <?php }
         }
         ?>
     </div>
-    <br>past orders
-    <div>
+    <br><div class="active_orders"><h3>Past Orders</h3></div>
+   
         <?php
         $q="select * from orders where order_from='$restaurant_log_email';";
         $q1=mysqli_query($con,$q);
         while ($row=mysqli_fetch_array($q1)){
             if($row['status']=="delivered" || $row['status']=="declined"){ ?>
-                <div>
-                    order id:<?php echo $row['order_id']; ?>
-                    <br>ordered by:<?php echo $row['order_by']; ?>
-                    <br>items:<br><?php 
+                  <div class="distance">
+                    <div class="ordercard">
+                        <div class="ordercardinsidetext">
+                    Order id:<?php echo $row['order_id']; ?>
+                    <br>Customer Email:<?php echo $row['order_by']; ?>
+                    <br>Items:<br><?php 
                     $item_list  = preg_split("/ /", $row['items']);
                     for($i=0;$i<sizeof($item_list);$i=$i+2){
                         $q_itm="SELECT name FROM menu where sno='$item_list[$i]' and restaurant_id='$restaurant_log_email' ";
                         $q1_itm=mysqli_query($con,$q_itm);
                         $row_itm=mysqli_fetch_array($q1_itm);
-                        echo "<div>&nbsp;&nbsp;".$row_itm['name']." X ".$item_list[$i+1]."</div>";
+                        echo "<div>&nbsp;&nbsp;".$row_itm['name']." &times; ".$item_list[$i+1]."</div>";
                     }
                     ?>
-                    total:<?php echo $row['total']; ?>
-                    <br>address:<?php echo $row['address']; ?>
-                    <br>rider:<?php echo $row['rider']; ?>
-                    <br>instance:<?php echo $row['instance']; ?>
-                    <br>status:<?php echo $row['status']; ?>
-                </div>
-                <br>   
+                    Total:<?php echo $row['total']; ?>
+                
+                    <br>Rider Email:<?php echo $row['rider']; ?>
+                    <br>Instance:<?php echo $row['instance']; ?>
+                    <br>Status:<?php echo $row['status']; ?>
+                </div></div></div>
+                
         <?php }
         }
         ?>
+    <br><br><br>
+
+    
+    <b>    RECOMMENDED MAKING:</b>
+        <?php
+    $res = $restaurant_log_email;
+    date_default_timezone_set('Asia/Kolkata');
+    $a=date("h");
+    $a=(int)$a;
+    
+    $part;
+    if($a>7 && $a<15)
+    {
+        $part=1;
+    }
+    else if($a>=15 && $a<20)
+    {
+        $part=2;
+    }
+    else if($a>=19 && $a<22)
+        $part=3;
+    else
+        $part=4;
+    $part=$part+2;
+    $mArray= array();
+    $max=0;
+    $sub;
+    $count=0;
+    $sql = "SELECT distinct(item_name) FROM `recommend` WHERE res_name='$res';";
+    $ym=0;
+    $xm=0;
+    $query=mysqli_query($con,$sql);
+    while($k = mysqli_fetch_array($query))
+    {
+        $d=$k['item_name'];
+        $q="SELECT * FROM `recommend` WHERE res_name='$res' and item_name='$d';";
+        $que = mysqli_query($con,$q);
+        while($g = mysqli_fetch_array($que))
+        {
+            $count++;
+            $s=(int)$g[$part];
+            $ym+=$s;
+            $xm+=$count;
+            //echo $count;
+        }
+        $num=0;
+        $ym=$ym/$count;
+        $xm=$xm/$count;
+        //echo $ym;
+            $cou=0;
+        $den1=0;
+        $den2=0;
+        $qw="SELECT * FROM `recommend` WHERE res_name='$res' and item_name='$d';";
+        $quw = mysqli_query($con,$qw);
+        $a=0;
+        while($y = mysqli_fetch_array($quw))
+        {   
+            $a=$a+1;
+            //echo $a;
+            
+            $v = (int)$y[$part];
+            $num+=($cou-$xm)*($v-$ym);
+            
+            $den1+=pow(($cou-$xm),2);
+            
+            $den2+=pow(($v-$ym),2);
+            $cou++;
+            //echo $cou;
+        }
+        $sy= $den2/($count-1);
+        $sx=$den1/($count-1);
+
+        $dem = pow(($den1*$den2),0.5);
+        $r=1;
+        if($dem!=0)
+        $r = $num/$dem;
+        $sy=pow($sy,0.5);
+        $sx=pow($sx,0.5);
+        $b=$r*($sy/$sx);
+        $a = $ym-$b*$xm;
+        $pre = $a+$b*$count;
+        echo $k['item_name']." ".(int)$pre."<br>";
+    }
+  ?>
     </div>
+
 	<form method="post" >
        <div id="item_fileds">
            <div>
@@ -156,14 +256,15 @@ if(isset($_POST['update'])){
        	<input type="submit" name="update" value="Update">
     </form>
 
-    <div>
+    <div class="border">
     	<table>
     	<?php
     	$q="SELECT * FROM menu where restaurant_id='$restaurant_log_email'; ";
 		$q1=mysqli_query($con,$q);
 		$rowcount=mysqli_num_rows($q1);
 		if ($rowcount>0) {
-    	?>	
+    	?>
+
     	<tr><td><b>name</b></td><td><b>price</b></td><td><b>discount</b></td><td><b>description</b></td></tr></pre>
     	<?php
     			while ($row=mysqli_fetch_array($q1)) {
@@ -180,6 +281,7 @@ if(isset($_POST['update'])){
     	?>
     	</table>
     </div>
+    <br>
  
 
         <div class="navbar">

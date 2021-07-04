@@ -6,7 +6,6 @@ if(!isset($_SESSION['log_email'])){
 include 'connection.php';
 $q="SELECT * FROM `restaurants`; ";
 $q1=mysqli_query($con,$q);
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,6 +16,10 @@ $q1=mysqli_query($con,$q);
 	<link rel="stylesheet" type="text/css" href="css/home.css">
 	<title>home page</title>
 	<link rel="shortcut icon" href="images/logo.png" type="image/png">
+	<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
  
 </head>
 
@@ -88,7 +91,7 @@ $q1=mysqli_query($con,$q);
 <br><br><br><br>
 
  <div class="navbar">
-        <a href="#">Past Orders</a>
+        <a href="order_status.php">Active Orders</a>
         <a href="logout.php">Log Out</a>
         <div class="copy">&copy; foodly</div>
 </div>
@@ -116,13 +119,8 @@ $q1=mysqli_query($con,$q);
 		$('#msg-box').load("fetch_msg.php").fadeIn("slow");
 	},1000);
 });
-
 </script>
 <script src="js/home.js" type="text/javascript"></script>
-    <script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
 
 </body>
 </html>
